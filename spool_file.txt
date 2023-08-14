@@ -1,0 +1,255 @@
+REM Creating all tables
+
+DROP TABLE ToolRequirement;
+DROP TABLE ToolList;
+DROP TABLE ToolDetails;
+DROP TABLE ToolDetailsType;
+DROP TABLE RawMaterial;
+DROP TABLE Supplier;
+
+DROP TABLE Orders;
+DROP TABLE FirmLocation;
+DROP TABLE FirmLocationDiv;
+DROP TABLE Firm;
+
+
+
+create table Firm(
+FirmID number(10),
+Firm_Name varchar(20),
+Email varchar(20),
+OrderType varchar(20),
+Contact number(10),
+constraint pk1 primary key(FirmID));
+
+create table Orders(
+FirmID number(10),
+OrderID number(10),
+ToolID number(10),
+DateOfDelivery date,
+DateOfPurchase date,
+Quantity number(10),
+TotalPrice number(10),
+constraint pk2 primary key(FirmID,OrderID,ToolID),
+constraint fk1 foreign key(FirmID) references Firm(FirmID));
+
+
+create table Supplier(
+SupplierID number(10),
+SupplierName varchar(20),
+ContactNo number(10),
+SupplierLocation varchar(20),
+constraint pk4 primary key(SupplierID));
+
+create table RawMaterial(
+MaterialId number(10),
+MaterialName varchar(20),
+SupplierID number(10),
+ImportDate date,
+Quantity number(10),
+constraint pk3 primary key(MaterialId),
+constraint fk2 foreign key(SupplierID) references Supplier(SupplierID));
+
+
+create table ToolDetailsType(
+ToolName varchar(20),
+ToolType varchar(20),
+constraint pk5 primary key(ToolName));
+
+create table ToolDetails(
+ToolID number(10),
+ToolName varchar(20),
+PowerIntake number(10),
+MFG date,
+weight number(10),
+constraint fk5 foreign key(ToolName) references ToolDetailsType(ToolName),
+constraint pk6 primary key(ToolID));
+
+create table ToolList(
+ToolID number(10),
+ToolName varchar(20),
+Quantity number(10),
+constraint fk6 foreign key(ToolID) references ToolDetails(ToolID));
+
+create table FirmLocationDiv(
+City varchar(20),
+Country varchar(20),
+constraint pk7 primary key(City));
+
+create table FirmLocation(
+FirmID number(10),
+City varchar(20),
+constraint fk7 foreign key(City) references FirmLocationDiv(City),
+constraint fk8 foreign key(FirmID) references Firm(FirmID));
+
+create table ToolRequirement(
+MaterialId number(10),
+ToolID number(10),
+Description varchar(20),
+constraint fk3 foreign key(MaterialId) references RawMaterial(MaterialId),
+constraint fk4 foreign key(ToolID) references ToolDetails(ToolID));
+
+
+
+
+INSERT INTO Firm (FirmID, Firm_Name, Email, OrderType, Contact)
+VALUES (1, 'ABC Company', 'abc@example.com', 'Online', 1234567890);
+
+INSERT INTO Firm (FirmID, Firm_Name, Email, OrderType, Contact)
+VALUES (2, 'XYZ Corporation', 'xyz@example.com', 'Offline', 9876543210);
+
+INSERT INTO Firm (FirmID, Firm_Name, Email, OrderType, Contact)
+VALUES (3, '123 Industries', '123@example.com', 'Online', 4567891230);
+
+INSERT INTO Firm (FirmID, Firm_Name, Email, OrderType, Contact)
+VALUES (4, 'PQR Enterprises', 'pqr@example.com', 'Offline', 7891234560);
+
+INSERT INTO Firm (FirmID, Firm_Name, Email, OrderType, Contact)
+VALUES (5, 'LMN Ltd.', 'lmn@example.com', 'Online', 3216549870);
+
+
+INSERT INTO Orders (FirmID, OrderID, ToolID, DateOfDelivery, DateOfPurchase, Quantity, TotalPrice)
+VALUES (1, 101, 1, TO_DATE('2023-06-15', 'YYYY-MM-DD'), TO_DATE('2023-06-10', 'YYYY-MM-DD'), 5, 100);
+
+INSERT INTO Orders (FirmID, OrderID, ToolID, DateOfDelivery, DateOfPurchase, Quantity, TotalPrice)
+VALUES (2, 102, 2, TO_DATE('2023-06-16', 'YYYY-MM-DD'), TO_DATE('2023-06-11', 'YYYY-MM-DD'), 10, 200);
+
+INSERT INTO Orders (FirmID, OrderID, ToolID, DateOfDelivery, DateOfPurchase, Quantity, TotalPrice)
+VALUES (3, 103, 3, TO_DATE('2023-06-17', 'YYYY-MM-DD'), TO_DATE('2023-06-12', 'YYYY-MM-DD'), 15, 300);
+
+INSERT INTO Orders (FirmID, OrderID, ToolID, DateOfDelivery, DateOfPurchase, Quantity, TotalPrice)
+VALUES (4, 104, 4, TO_DATE('2023-06-18', 'YYYY-MM-DD'), TO_DATE('2023-06-13', 'YYYY-MM-DD'), 20, 400);
+
+INSERT INTO Orders (FirmID, OrderID, ToolID, DateOfDelivery, DateOfPurchase, Quantity, TotalPrice)
+VALUES (5, 105, 5, TO_DATE('2023-06-19', 'YYYY-MM-DD'), TO_DATE('2023-06-14', 'YYYY-MM-DD'), 25, 500);
+
+
+INSERT INTO Supplier (SupplierID, SupplierName, ContactNo, SupplierLocation)
+VALUES (1, 'XYZ Supplier', 9876543210, 'City A');
+
+INSERT INTO Supplier (SupplierID, SupplierName, ContactNo, SupplierLocation)
+VALUES (2, 'ABC Suppliers', 1234567890, 'City B');
+
+INSERT INTO Supplier (SupplierID, SupplierName, ContactNo, SupplierLocation)
+VALUES (3, 'PQR Trading', 4567891230, 'City C');
+
+INSERT INTO Supplier (SupplierID, SupplierName, ContactNo, SupplierLocation)
+VALUES (4, 'LMN Distributors', 7891234560, 'City D');
+
+INSERT INTO Supplier (SupplierID, SupplierName, ContactNo, SupplierLocation)
+VALUES (5, '123 Wholesalers', 3216549870, 'City E');
+
+
+INSERT INTO RawMaterial (MaterialId, MaterialName, SupplierID, ImportDate, Quantity)
+VALUES (1, 'Raw Material A', 1, TO_DATE('2023-06-10', 'YYYY-MM-DD'), 100);
+
+INSERT INTO RawMaterial (MaterialId, MaterialName, SupplierID, ImportDate, Quantity)
+VALUES (2, 'Raw Material B', 2, TO_DATE('2023-06-11', 'YYYY-MM-DD'), 200);
+
+INSERT INTO RawMaterial (MaterialId, MaterialName, SupplierID, ImportDate, Quantity)
+VALUES (3, 'Raw Material C', 3, TO_DATE('2023-06-12', 'YYYY-MM-DD'), 300);
+
+INSERT INTO RawMaterial (MaterialId, MaterialName, SupplierID, ImportDate, Quantity)
+VALUES (4, 'Raw Material D', 4, TO_DATE('2023-06-13', 'YYYY-MM-DD'), 400);
+
+INSERT INTO RawMaterial (MaterialId, MaterialName, SupplierID, ImportDate, Quantity)
+VALUES (5, 'Raw Material E', 5, TO_DATE('2023-06-14', 'YYYY-MM-DD'), 500);
+
+
+INSERT INTO ToolDetailsType (ToolName, ToolType)
+VALUES ('Tool A', 'Type 1');
+
+INSERT INTO ToolDetailsType (ToolName, ToolType)
+VALUES ('Tool B', 'Type 2');
+
+INSERT INTO ToolDetailsType (ToolName, ToolType)
+VALUES ('Tool C', 'Type 3');
+
+INSERT INTO ToolDetailsType (ToolName, ToolType)
+VALUES ('Tool D', 'Type 4');
+
+INSERT INTO ToolDetailsType (ToolName, ToolType)
+VALUES ('Tool E', 'Type 5');
+
+
+INSERT INTO ToolDetails (ToolID, ToolName, PowerIntake, MFG, weight)
+VALUES (1, 'Tool A', 100, TO_DATE('2023-06-01', 'YYYY-MM-DD'), 10);
+
+INSERT INTO ToolDetails (ToolID, ToolName, PowerIntake, MFG, weight)
+VALUES (2, 'Tool B', 200, TO_DATE('2023-06-02', 'YYYY-MM-DD'), 20);
+
+INSERT INTO ToolDetails (ToolID, ToolName, PowerIntake, MFG, weight)
+VALUES (3, 'Tool C', 300, TO_DATE('2023-06-03', 'YYYY-MM-DD'), 30);
+
+INSERT INTO ToolDetails (ToolID, ToolName, PowerIntake, MFG, weight)
+VALUES (4, 'Tool D', 400, TO_DATE('2023-06-04', 'YYYY-MM-DD'), 40);
+
+INSERT INTO ToolDetails (ToolID, ToolName, PowerIntake, MFG, weight)
+VALUES (5, 'Tool E', 500, TO_DATE('2023-06-05', 'YYYY-MM-DD'), 50);
+
+
+INSERT INTO ToolList (ToolID, ToolName, Quantity)
+VALUES (1, 'Tool A', 5);
+
+INSERT INTO ToolList (ToolID, ToolName, Quantity)
+VALUES (2, 'Tool B', 10);
+
+INSERT INTO ToolList (ToolID, ToolName, Quantity)
+VALUES (3, 'Tool C', 15);
+
+INSERT INTO ToolList (ToolID, ToolName, Quantity)
+VALUES (4, 'Tool D', 20);
+
+INSERT INTO ToolList (ToolID, ToolName, Quantity)
+VALUES (5, 'Tool E', 25);
+
+
+INSERT INTO FirmLocationDiv (City, Country)
+VALUES ('City A', 'Country 1');
+
+INSERT INTO FirmLocationDiv (City, Country)
+VALUES ('City B', 'Country 2');
+
+INSERT INTO FirmLocationDiv (City, Country)
+VALUES ('City C', 'Country 3');
+
+INSERT INTO FirmLocationDiv (City, Country)
+VALUES ('City D', 'Country 4');
+
+INSERT INTO FirmLocationDiv (City, Country)
+VALUES ('City E', 'Country 5');
+
+
+INSERT INTO FirmLocation (FirmID, City)
+VALUES (1, 'City A');
+
+INSERT INTO FirmLocation (FirmID, City)
+VALUES (2, 'City B');
+
+INSERT INTO FirmLocation (FirmID, City)
+VALUES (3, 'City C');
+
+INSERT INTO FirmLocation (FirmID, City)
+VALUES (4, 'City D');
+
+INSERT INTO FirmLocation (FirmID, City)
+VALUES (5, 'City E');
+
+
+INSERT INTO ToolRequirement (MaterialId, ToolID, Description)
+VALUES (1, 1, 'Description 1');
+
+INSERT INTO ToolRequirement (MaterialId, ToolID, Description)
+VALUES (2, 2, 'Description 2');
+
+INSERT INTO ToolRequirement (MaterialId, ToolID, Description)
+VALUES (3, 3, 'Description 3');
+
+INSERT INTO ToolRequirement (MaterialId, ToolID, Description)
+VALUES (4, 4, 'Description 4');
+
+INSERT INTO ToolRequirement (MaterialId, ToolID, Description)
+VALUES (5, 5, 'Description 5');
+
+
+
